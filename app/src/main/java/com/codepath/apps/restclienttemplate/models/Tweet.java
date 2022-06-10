@@ -67,17 +67,17 @@ public class Tweet {
 
             final long diff = now - time;
             if (diff < MINUTE_MILLIS) {
-                return ".just now";
+                return "just now";
             } else if (diff < 2 * MINUTE_MILLIS) {
-                return ".1m";
+                return "a minute ago";
             } else if (diff < 50 * MINUTE_MILLIS) {
                 return "." + diff / MINUTE_MILLIS + "m";
             } else if (diff < 90 * MINUTE_MILLIS) {
-                return ".1h";
+                return "an hour ago";
             } else if (diff < 24 * HOUR_MILLIS) {
                 return "." + diff / HOUR_MILLIS + "h";
             } else if (diff < 48 * HOUR_MILLIS) {
-                return ".yesterday";
+                return "yesterday";
             } else {
                 return "." + diff / DAY_MILLIS + "d";
             }
@@ -85,6 +85,7 @@ public class Tweet {
             Log.i(TAG, "getRelativeTimeAgo failed");
             e.printStackTrace();
         }
+
         return "";
     }
 
