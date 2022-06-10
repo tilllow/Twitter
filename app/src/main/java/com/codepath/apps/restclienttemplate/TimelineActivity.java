@@ -22,6 +22,7 @@ import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
+import org.parceler.Parcels;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -35,11 +36,12 @@ public class TimelineActivity extends AppCompatActivity {
     public static final String TAG = "TimeLineActivity";
 
     private SwipeRefreshLayout swipeContainer;
+    MenuItem miActionProgressItem;
+    MenuItem miLogout;
     TwitterClient client;
     RecyclerView rvTweets;
     List<Tweet> tweets;
     TweetsAdapter adapter;
-    Button btnLogout;
 
 
     @Override
@@ -52,6 +54,7 @@ public class TimelineActivity extends AppCompatActivity {
         tweets = new ArrayList<>();
         adapter = new TweetsAdapter(this, tweets);
         swipeContainer = findViewById(R.id.swipeContainer);
+        miLogout = findViewById(R.id.miLogout);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -59,10 +62,26 @@ public class TimelineActivity extends AppCompatActivity {
             }
         });
         // Recycler view setup : layout manager and layout
-
+        rvTweets.setLayoutManager(new LinearLayoutManager(this));
+        rvTweets.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         rvTweets.setAdapter(adapter);
-        btnLogout = findViewById(R.id.btnLogout);
         populateHomeTimeline();
+    }
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        miActionProgressItem = menu.findItem(R.id.miActionProgress);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    public void showProgressBar() {
+        // Show progress item
+        miActionProgressItem.setVisible(true);
+    }
+
+    public void hideProgressBar() {
+        // Hide progress item
+        miActionProgressItem.setVisible(false);
     }
 
     public void fetchTimelineAsync(int page){
@@ -81,15 +100,6 @@ public class TimelineActivity extends AppCompatActivity {
         });
     }
 
-    public void onLogoutButton(View v){
-        TwitterApp.getRestClient(this).clearAccessToken();
-        Intent i = new Intent(this,LoginActivity.class);
-        i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-        startActivity(i);
-    }
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_main,menu);
@@ -103,6 +113,12 @@ public class TimelineActivity extends AppCompatActivity {
             Intent intent = new Intent(this, ComposeActivity.class);
             startActivityForResult(intent,REQUEST_CODE);
             return true;
+        } else if (item.getItemId() == R.id.miLogout){
+            TwitterApp.getRestClient(this).clearAccessToken();
+            Intent i = new Intent(this,LoginActivity.class);
+            i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+            i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            startActivity(i);
         }
         return super.onOptionsItemSelected(item);
     }
@@ -111,7 +127,7 @@ public class TimelineActivity extends AppCompatActivity {
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         if (requestCode == REQUEST_CODE && resultCode == RESULT_OK){
             //Get data from the intent(tweet)
-            Tweet tweet = data.getParcelableExtra("tweet");
+            Tweet tweet = Parcels.unwrap(data.getParcelableExtra("tweet"));
             // Update the RV with the Tweet
             // Modify data source to include tweets
             tweets.add(0,tweet);

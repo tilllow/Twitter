@@ -1,13 +1,18 @@
 package com.codepath.apps.restclienttemplate;
 
+import static com.codepath.apps.restclienttemplate.R.drawable.ic_vector_compose;
+
 import android.content.Context;
+import android.media.Image;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
@@ -16,6 +21,7 @@ import com.codepath.apps.restclienttemplate.models.Tweet;
 import org.w3c.dom.Text;
 
 import java.util.List;
+import java.util.Objects;
 
 public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.Viewholder>{
 
@@ -60,20 +66,41 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.Viewholder
         ImageView ivProfileImage;
         TextView tvBody;
         TextView tvScreenName;
+        ImageView ivPhoto;
+        TextView tvCreatedAt;
+        ImageButton ibComment;
+        ImageButton ibRetweet;
+        ImageButton ibLike;
+        CardView cvPostImage;
 
         public Viewholder(@NonNull View itemView) {
             super(itemView);
             ivProfileImage = itemView.findViewById(R.id.ivProfileImage);
             tvBody = itemView.findViewById(R.id.tvBody);
             tvScreenName = itemView.findViewById(R.id.tvScreenName);
+            ivPhoto = itemView.findViewById(R.id.ivPostImage);
+            tvCreatedAt = itemView.findViewById(R.id.tvCreatedAt);
+            ibComment = itemView.findViewById(R.id.ibComment);
+            ibRetweet = itemView.findViewById(R.id.ibRetweet);
+            ibLike = itemView.findViewById(R.id.ibLike);
+            cvPostImage = itemView.findViewById(R.id.cvPostImage);
         }
 
         public void bind(Tweet tweet) {
             tvBody.setText(tweet.body);
-            tvScreenName.setText(tweet.user.screenName);
+            tvCreatedAt.setText(tweet.getRelativeTimeAgo(tweet.createdAt));
+            tvScreenName.setText("@" + tweet.user.screenName);
+            ibComment.setBackgroundResource(R.drawable.ic_vector_compose_dm);
+            ibRetweet.setBackgroundResource(R.drawable.ic_vector_retweet_stroke);
+            ibLike.setBackgroundResource(R.drawable.ic_vector_heart_stroke);
+
             Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
+            if (!Objects.equals(tweet.userPostImageUrl, "")){
+                Glide.with(context).load(tweet.userPostImageUrl).into(ivPhoto);
+            } else{
+                ivPhoto.setVisibility(View.GONE);
+                cvPostImage.setVisibility(View.GONE);
+            }
         }
-
-
     }
 }

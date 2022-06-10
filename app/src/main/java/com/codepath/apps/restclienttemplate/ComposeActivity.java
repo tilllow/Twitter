@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -25,8 +27,21 @@ public class ComposeActivity extends AppCompatActivity {
     public static final int MAX_TWEET_LENGTH = 140;
     EditText etCompose;
     Button btnTweet;
+    MenuItem miActionProgressItem;
 
     TwitterClient client;
+
+    @Override
+    public boolean onPrepareOptionsMenu(Menu menu) {
+        miActionProgressItem = menu.findItem(R.id.miPostProgress);
+        return super.onPrepareOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.compose_menu_item,menu);
+        return super.onCreateOptionsMenu(menu);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,11 +52,15 @@ public class ComposeActivity extends AppCompatActivity {
 
         etCompose = findViewById(R.id.etCompose);
         btnTweet = findViewById(R.id.btnTweet);
+        miActionProgressItem = findViewById(R.id.miPostProgress);
+
+
 
         // Set click listener on the button
         btnTweet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                miActionProgressItem.setVisible(true);
                 String tweetContent = etCompose.getText().toString();
                 if(tweetContent.isEmpty()){
                     Toast.makeText(ComposeActivity.this,"Sorry, your tweet cannot be empty",Toast.LENGTH_SHORT).show();
@@ -63,10 +82,14 @@ public class ComposeActivity extends AppCompatActivity {
                            Intent intent = new Intent();
                            intent.putExtra("tweet", Parcels.wrap(tweet));
                            setResult(RESULT_OK,intent);
+                           miActionProgressItem.setVisible(false);
                            finish();
+
                         } catch (JSONException e) {
                             e.printStackTrace();
+                            miActionProgressItem.setVisible(false);
                         }
+
                     }
 
                     @Override
