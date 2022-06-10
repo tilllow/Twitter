@@ -1,9 +1,12 @@
 package com.codepath.apps.restclienttemplate;
 
 import static com.codepath.apps.restclienttemplate.R.drawable.ic_vector_compose;
+import static com.codepath.apps.restclienttemplate.R.drawable.vector_compose_dm_fab;
 
 import android.content.Context;
+import android.content.Intent;
 import android.media.Image;
+import android.os.Parcelable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.bumptech.glide.Glide;
 import com.codepath.apps.restclienttemplate.models.Tweet;
 
+import org.parceler.Parcels;
 import org.w3c.dom.Text;
 
 import java.util.List;
@@ -84,15 +88,30 @@ public class TweetsAdapter extends RecyclerView.Adapter<TweetsAdapter.Viewholder
             ibRetweet = itemView.findViewById(R.id.ibRetweet);
             ibLike = itemView.findViewById(R.id.ibLike);
             cvPostImage = itemView.findViewById(R.id.cvPostImage);
+
         }
 
         public void bind(Tweet tweet) {
             tvBody.setText(tweet.body);
             tvCreatedAt.setText(tweet.getRelativeTimeAgo(tweet.createdAt));
             tvScreenName.setText("@" + tweet.user.screenName);
-            ibComment.setBackgroundResource(R.drawable.ic_vector_compose_dm);
+            ibComment.setBackgroundResource(vector_compose_dm_fab);
             ibRetweet.setBackgroundResource(R.drawable.ic_vector_retweet_stroke);
             ibLike.setBackgroundResource(R.drawable.ic_vector_heart_stroke);
+
+            ibComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    ibComment.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            Intent intent = new Intent(context,comment_activity.class);
+                            intent.putExtra("EXTRA_TWEET",Parcels.wrap(tweet));
+                            context.startActivity(intent);
+                        }
+                    });
+                }
+            });
 
             Glide.with(context).load(tweet.user.profileImageUrl).into(ivProfileImage);
             if (!Objects.equals(tweet.userPostImageUrl, "")){

@@ -15,10 +15,12 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.Toast;
 
 import com.codepath.apps.restclienttemplate.models.Tweet;
 import com.codepath.asynchttpclient.callback.JsonHttpResponseHandler;
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -42,6 +44,8 @@ public class TimelineActivity extends AppCompatActivity {
     RecyclerView rvTweets;
     List<Tweet> tweets;
     TweetsAdapter adapter;
+    FloatingActionButton fbCompose;
+
 
 
     @Override
@@ -55,6 +59,7 @@ public class TimelineActivity extends AppCompatActivity {
         adapter = new TweetsAdapter(this, tweets);
         swipeContainer = findViewById(R.id.swipeContainer);
         miLogout = findViewById(R.id.miLogout);
+        fbCompose = findViewById(R.id.fbCompose);
         swipeContainer.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
@@ -66,7 +71,19 @@ public class TimelineActivity extends AppCompatActivity {
         rvTweets.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         rvTweets.setAdapter(adapter);
         populateHomeTimeline();
+
+
+        fbCompose.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(TimelineActivity.this,ComposeActivity.class);
+                startActivity(intent);
+            }
+        });
     }
+
+
+
 
     @Override
     public boolean onPrepareOptionsMenu(Menu menu) {
@@ -108,12 +125,7 @@ public class TimelineActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-        if (item.getItemId() == R.id.compose){
-            // Compose icon has been selected
-            Intent intent = new Intent(this, ComposeActivity.class);
-            startActivityForResult(intent,REQUEST_CODE);
-            return true;
-        } else if (item.getItemId() == R.id.miLogout){
+        if (item.getItemId() == R.id.miLogout){
             TwitterApp.getRestClient(this).clearAccessToken();
             Intent i = new Intent(this,LoginActivity.class);
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

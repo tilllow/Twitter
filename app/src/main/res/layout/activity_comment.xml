@@ -3,42 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:layout_margin="5dp">
-
-    <ImageButton
-        android:id="@+id/ibLike"
-        android:layout_width="23dp"
-        android:layout_height="23dp"
-        android:layout_marginStart="40dp"
-        android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="@+id/ibRetweet"
-        app:layout_constraintStart_toEndOf="@+id/ibRetweet"
-        app:layout_constraintTop_toTopOf="@+id/ibRetweet"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/ic_vector_heart_stroke" />
-
-    <ImageButton
-        android:id="@+id/ibRetweet"
-        android:layout_width="23dp"
-        android:layout_height="23dp"
-        android:layout_marginStart="40dp"
-        android:clickable="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ibComment"
-        app:layout_constraintTop_toTopOf="@+id/ibComment"
-        app:layout_constraintVertical_bias="0.0"
-        app:srcCompat="@drawable/ic_vector_retweet_stroke" />
-
-    <ImageButton
-        android:id="@+id/ibComment"
-        android:layout_width="23dp"
-        android:layout_height="23dp"
-        android:layout_marginTop="5dp"
-        android:clickable="true"
-        app:layout_constraintStart_toStartOf="@+id/cvPostImage"
-        app:layout_constraintTop_toBottomOf="@+id/cvPostImage"
-        android:src="@drawable/vector_compose_dm_fab"/>
 
     <TextView
         android:id="@+id/tvCreatedAt"
@@ -56,10 +22,9 @@
         android:layout_height="137dp"
         app:cardCornerRadius="8dp"
         app:cardElevation="0dp"
-        app:layout_constraintStart_toStartOf="@+id/tvBody"
-        app:layout_constraintTop_toBottomOf="@+id/tvBody"
         app:cardUseCompatPadding="true"
-        >
+        app:layout_constraintStart_toStartOf="@+id/tvBody"
+        app:layout_constraintTop_toBottomOf="@+id/tvBody">
 
         <ImageView
             android:id="@+id/ivPostImage"
@@ -114,5 +79,32 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/cardView"
         app:layout_constraintTop_toBottomOf="@+id/tvScreenName" />
+
+    <TextView
+        android:id="@+id/tvReplyMessage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:text="Replying to @Tilow"
+        android:textColor="#1DA1F2"
+        app:layout_constraintStart_toStartOf="@+id/cvPostImage"
+        app:layout_constraintTop_toBottomOf="@+id/cvPostImage" />
+
+    <EditText
+        android:id="@+id/etComment"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="@null"
+        android:ems="140"
+        android:inputType="textMultiLine"
+        android:hint="What do you want to say?"
+        android:textColor="@android:color/tab_indicator_text"
+        android:textSize="14sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/cvPostImage"
+        app:layout_constraintTop_toBottomOf="@+id/tvReplyMessage"
+        />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
